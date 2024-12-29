@@ -2,42 +2,91 @@
 
 import { Sidebar } from "flowbite-react";
 import {
-  HiArrowSmRight,
   HiChartPie,
   HiInbox,
   HiShoppingBag,
-  HiTable,
   HiUser,
   HiViewBoards,
+  HiOutlineMenuAlt1,
 } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export function Aside() {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
-    <div className="">
-      <Sidebar
-        aria-label="Sidebar with logo branding example"
-        className="bg-gray-400 h-screen w-60"
+    <div className="flex">
+      {/* Sidebar Toggle Button */}
+      <button
+        className="p-2 bg-gray-700 text-white fixed z-50 rounded-md m-2 lg:hidden"
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <Sidebar.Items className="mt-12">
+        <HiOutlineMenuAlt1 size={24} />
+      </button>
+
+      {/* Sidebar */}
+      <Sidebar
+        aria-label="Responsive Sidebar"
+        className={`bg-gray-800 text-gray-300 fixed h-screen z-40 transition-all duration-300 ease-in-out ${
+          isOpen ? "w-60" : "w-16"
+        } lg:w-60`}
+      >
+        <Sidebar.Items className="mt-10">
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={HiChartPie} className="text-left">
+            {/* Sidebar Header */}
+            <div
+              className={`text-black font-bold text-xl p-4 transition-opacity duration-300 ${
+                isOpen ? "opacity-100" : "opacity-0"
+              }`}
+            >
               Rimal Blog
+            </div>
+
+            {/* Sidebar Links */}
+            <Sidebar.Item
+              as="div"
+              icon={HiChartPie}
+              className="hover:bg-green-700 transition duration-200 rounded-md"
+            >
+              <Link to="/" className="flex items-center">
+                Dashboard
+              </Link>
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiViewBoards} className="text-left">
-              <Link to="/allpost">Your Post </Link>
+            <Sidebar.Item
+              as="div"
+              icon={HiViewBoards}
+              className="hover:bg-green-700 transition duration-200 rounded-md"
+            >
+              <Link to="/allpost">Your Posts</Link>
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiInbox} className="text-left">
-              Comments
+            <Sidebar.Item
+              as="div"
+              icon={HiInbox}
+              className="hover:bg-green-700 transition duration-200 rounded-md"
+            >
+              <Link to="/comments">Comments</Link>
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiUser} className="text-left">
-              Stats
+            <Sidebar.Item
+              as="div"
+              icon={HiUser}
+              className="hover:bg-green-700 transition duration-200 rounded-md"
+            >
+              <Link to="/stats">Stats</Link>
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiShoppingBag} className="text-left">
-              Products
+            <Sidebar.Item
+              as="div"
+              icon={HiShoppingBag}
+              className="hover:bg-green-700 transition duration-200 rounded-md"
+            >
+              <Link to="/products">Products</Link>
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiUser} className="text-left">
-              <Link to="/profile"> Your Profile </Link>
+            <Sidebar.Item
+              as="div"
+              icon={HiUser}
+              className="hover:bg-green-700 transition duration-200 rounded-md"
+            >
+              <Link to="/profile">Your Profile</Link>
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>

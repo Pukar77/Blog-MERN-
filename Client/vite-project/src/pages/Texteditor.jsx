@@ -8,7 +8,7 @@ function Texteditor() {
   console.log(quill); // undefined > Quill Object
   console.log(quillRef);
   return (
-    <div style={{ width: 500, height: 300 }}>
+    <div style={{ width: 900, height: 500 }}>
       <div ref={quillRef} />
     </div>
   );

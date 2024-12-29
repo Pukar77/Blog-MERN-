@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Aside } from "./Aside";
-import { Link, NavLink } from "react-router-dom";
-import Readblog from "./Readblog";
-import { Button } from "flowbite-react";
+import { NavLink } from "react-router-dom";
 import ButtonComponent from "./PageComonent/ButtonComponent";
 
 export const Allpost = () => {
   const [blogdetail, setBlogDetail] = useState([]);
-  const [readblog, setReadBlog] = useState([]);
 
   // Function to retrieve the token from local storage
   const getTokenFromLocalStorage = () => {
@@ -49,75 +46,49 @@ export const Allpost = () => {
     }
   };
 
-  // const readNewBlog = async (id) => {
-  //   try {
-  //     const token = getTokenFromLocalStorage();
-  //     if (!token) {
-  //       console.log("Token not available");
-  //     }
-  //     let response = await fetch(
-  //       `http://localhost:8000/api/home/readblog/${id}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     let data = await response.json();
-  //     console.log(data);
-  //     setBlogDetail(data.blogs);
-  //   } catch (e) {
-  //     console.log("Some error occured", e);
-  //   }
-  // };
-
   useEffect(() => {
     indblog();
   }, []);
 
   return (
     <div className="flex">
-      <div>
+      {/* Aside Section */}
+      <div className="w-1/4 min-w-[250px] bg-gray-100 h-screen">
         <Aside />
       </div>
 
-      <div className="w-full">
-        <h1 className="text-center">Your blogs</h1>
+      {/* Main Content Section */}
+      <div className="w-3/4 p-4">
+        <h1 className="text-center text-xl font-bold mb-4">Your Blogs</h1>
 
         <div>
           {blogdetail && blogdetail.length > 0 ? (
             blogdetail.map((item, index) => {
               console.log("Blog item:", item);
               return (
-                <div className="border-2 border-red-300 p-4 mb-1" key={index}>
-                  <h2>Title: {item.title || "No title available"}</h2>
-                  <h2>Created at: {item.createdAt}</h2>
-                  {/* Base */}
+                <div
+                  className="border-2 border-red-300 p-4 mb-4 rounded-lg"
+                  key={index}
+                >
+                  <h2 className="text-lg font-semibold">
+                    Title: {item.title || "No title available"}
+                  </h2>
+                  <h3 className="text-sm text-gray-600">
+                    Created at: {item.createdAt}
+                  </h3>
 
-                  <a
-                    className="group relative inline-block text-sm font-medium text-white focus:outline-none focus:ring"
-                    href="#"
+                  <NavLink
+                    className="mt-2 inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-500 transition"
+                    to="/readblog"
+                    state={{ invdata: item._id }}
                   >
-                    <span className="absolute inset-0 border border-red-600 group-active:border-red-500"></span>
-                    <NavLink
-                      className="block border border-red-600 bg-red-600 px-12 py-3 transition-transform active:border-red-500 active:bg-red-500 group-hover:-translate-x-1 group-hover:-translate-y-1"
-                      to="/readblog"
-                      state={{ invdata: item._id }}
-                    >
-                      {" "}
-                      <ButtonComponent id={item._id} />
-                      {/* <Button id={item._id} /> */}
-                    </NavLink>
-                  </a>
-
-                  {/* Border */}
+                    <ButtonComponent id={item._id} />
+                  </NavLink>
                 </div>
               );
             })
           ) : (
-            <p>Data not available</p>
+            <p className="text-center text-gray-600">No blogs available</p>
           )}
         </div>
       </div>

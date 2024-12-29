@@ -32,7 +32,7 @@ function PostBlog() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex gap-60">
       {/* <form onSubmit={postBlog}>
         <input
           className="border-pink-500"

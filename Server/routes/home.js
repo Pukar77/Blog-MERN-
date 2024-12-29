@@ -1,6 +1,10 @@
 const express = require("express");
 const authmiddleware = require("../middleware/auth-middleware");
-const { uploadFile, getindblog } = require("../controller/home-controller");
+const {
+  uploadFile,
+  getindblog,
+  like,
+} = require("../controller/home-controller");
 const uploadMiddleware = require("../middleware/upload-middleware");
 const readblog = require("../controller/readblog-controller");
 const homeRoute = express.Router();
@@ -21,6 +25,7 @@ homeRoute.post(
 );
 
 homeRoute.get("/getindividualblog", authmiddleware, getindblog);
-homeRoute.get("/readblog/:id",authmiddleware , readblog);
+homeRoute.get("/readblog/:id", authmiddleware, readblog);
+homeRoute.post("/like/:id", authmiddleware, like);
 
 module.exports = homeRoute;

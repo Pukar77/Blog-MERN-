@@ -45,4 +45,39 @@ const getindblog = async (req, res) => {
   } catch (e) {}
 };
 
-module.exports = { uploadFile, getindblog };
+const like = async (req, res) => {
+  const id = req.params.id; // Blog post ID
+  const userid = req.body.userid; // User ID from request body
+
+  try {
+    // Fetch the blog post by ID
+    const blog = await fileSchema.findById(id);
+    console.log(blog);
+
+    if (!blog) {
+      return res.json({
+        status: false,
+        message: "No blog available",
+      });
+    } else {
+      if (blog.likeby.includes(userid)) {
+        return res.json({
+          status: false,
+          message: "Already liked😎",
+        });
+      } else {
+        blog.likeby.push(userid);
+        blog.like += 1;
+        await blog.save();
+      }
+    }
+  } catch (err) {
+    console.error("Error handling like/unlike:", err);
+    return res.status(500).json({
+      status: "Failed",
+      message: "Error handling like/unlike request.",
+    });
+  }
+};
+
+module.exports = { uploadFile, getindblog, like };
