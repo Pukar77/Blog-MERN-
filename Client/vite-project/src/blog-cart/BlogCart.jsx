@@ -1,11 +1,33 @@
 import React, { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function BlogCart() {
   const getToken = () => {
     return localStorage.getItem("accesstoken");
   };
+  const navigate = useNavigate();
 
   const [blogList, setBlogList] = useState([]);
+
+  const likeapi = async (id) => {
+    try {
+      const token = getToken();
+      const response = await fetch(
+        `http://localhost:8000/api/home/like/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const displayBlog = async () => {
     try {
@@ -24,6 +46,10 @@ function BlogCart() {
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
+  };
+
+  const gotoreadmore = (blog) => {
+    navigate("/readmore", { state: { blog } });
   };
 
   useEffect(() => {
@@ -77,11 +103,21 @@ function BlogCart() {
                       </div>
                       =
                       <div className="flex justify-end gap-2 p-2 pt-0">
-                        <button className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent">
+                        <button
+                          onClick={() => {
+                            gotoreadmore(blog);
+                          }}
+                          className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent"
+                        >
                           <span>Read more</span>
                         </button>
 
-                        <button className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent">
+                        <button
+                          onClick={() => {
+                            likeapi(blog._id);
+                          }}
+                          className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent"
+                        >
                           <span>Like</span>
                         </button>
                       </div>
