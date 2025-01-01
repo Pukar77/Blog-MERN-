@@ -9,25 +9,25 @@ function BlogCart() {
 
   const [blogList, setBlogList] = useState([]);
 
-  const likeapi = async (id) => {
-    try {
-      const token = getToken();
-      const response = await fetch(
-        `http://localhost:8000/api/home/like/${id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const likeapi = async (id) => {
+  //   try {
+  //     const token = getToken();
+  //     const response = await fetch(
+  //       `http://localhost:8000/api/home/like/${id}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   const displayBlog = async () => {
     try {
@@ -113,9 +113,9 @@ function BlogCart() {
                         </button>
 
                         <button
-                          onClick={() => {
-                            likeapi(blog._id);
-                          }}
+                          // onClick={() => {
+                          //   likeapi(blog._id);
+                          // }}
                           className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent"
                         >
                           <span>Like</span>
