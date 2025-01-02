@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const fileSchema = require("../modules/uploadFile-modle");
+const userinfo = require("../modules/usermodule");
 const uploadToCloudinary = require("../helper/cloudinary-helper");
 
 const uploadFile = async (req, res) => {
@@ -26,6 +27,31 @@ const uploadFile = async (req, res) => {
     return res.status(400).json({
       status: "Not success",
       message: "Some error occured",
+    });
+  }
+};
+
+const edituser = async (req, res) => {
+  const id = req.params.id;
+  const { username, email } = req.body;
+  console.log(username);
+  const edit = await userinfo.findByIdAndUpdate(
+    { _id: id },
+    { username, email },
+    {
+      new: true,
+    }
+  );
+
+  if (edit) {
+    return res.status(200).json({
+      status: true,
+      message: "Successfully modified user Information",
+    });
+  } else {
+    return res.status(400).json({
+      status: false,
+      message: "Error during modifiying user",
     });
   }
 };
@@ -80,4 +106,4 @@ const like = async (req, res) => {
   }
 };
 
-module.exports = { uploadFile, getindblog, like };
+module.exports = { uploadFile, getindblog, like, edituser };

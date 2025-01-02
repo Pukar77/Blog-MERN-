@@ -5,6 +5,7 @@ const homeRoute = require("./routes/home");
 const router3 = require("./routes/admin-route");
 const guestRouter = require("./routes/normalUser-route");
 const deleteroute = require("./routes/deleteblog-route");
+const editroute = require("./routes/edit-route");
 
 require("dotenv").config();
 
@@ -23,6 +24,7 @@ app.use("/api/home", homeRoute);
 app.use("/api/admin", router3);
 app.use("/api/guest", guestRouter);
 app.use("/api/deleteblog", deleteroute);
+app.use("/api/edituser", editroute);
 
 //running the server
 app.listen(process.env.PORT, () => {
