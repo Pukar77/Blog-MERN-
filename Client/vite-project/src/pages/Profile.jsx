@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const [detail, setDetail] = useState([]);
@@ -68,7 +69,7 @@ function Profile() {
                   <h6 className="text-lg font-semibold mt-6 mb-4">Email</h6>
                   <p className="text-sm text-gray-600">{detail.email}</p>
                   <hr className="border-gray-300 mb-4" />
-                  <div className="flex space-x-4">
+                  <div>
                     <a href="#!" className="text-blue-600 text-xl">
                       <i className="fab fa-facebook"></i>
                     </a>
@@ -78,6 +79,12 @@ function Profile() {
                     <a href="#!" className="text-pink-500 text-xl">
                       <i className="fab fa-instagram"></i>
                     </a>
+                    <Link to="/edit">
+                      {" "}
+                      <button className="bg-green-400 rounded p-2 w-36 text-center text-white flex justify-center items-center ">
+                        Edit Your Profile
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

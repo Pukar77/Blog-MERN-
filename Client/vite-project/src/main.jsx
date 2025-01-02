@@ -11,6 +11,7 @@ import { Allpost } from "./pages/Allpost.jsx";
 import Profile from "./pages/Profile.jsx";
 import Readblog from "./pages/Readblog.jsx";
 import Readmore from "./pages/readmore.jsx";
+import Edit from "./pages/Edit.jsx";
 
 // import Navbar from "./navbar/Navbar.jsx";
 
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: "/readmore",
     element: <Readmore />,
+  },
+  {
+    path: "/edit",
+    element: <Edit />,
   },
 ]);
 
