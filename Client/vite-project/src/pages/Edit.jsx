@@ -2,124 +2,147 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
 
 function Edit() {
-  const [userinfo, setUserInfo] = useState([]);
-  const [email, setEmail] = useState(" ");
-  const [username, setUsername] = useState(" ");
+  const [userinfo, setUserInfo] = useState({});
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
-  const gettoken = () => {
-    return localStorage.getItem("accesstoken");
-  };
+  // Retrieve the access token from localStorage
+  const getToken = () => localStorage.getItem("accesstoken");
 
-  const userdetail = async () => {
-    const token = gettoken();
+  // Fetch user details from the backend
+  const fetchUserDetails = async () => {
+    const token = getToken();
     if (!token) {
       console.log("Token not available");
-      alert("You must first login to change the user info");
-    } else {
-      try {
-        let response = await fetch("http://localhost:8000/api/home/welcome", {
-          method: "get",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        let data = await response.json();
-        console.log(data);
-        setUserInfo(data.user);
-      } catch (e) {
-        console.log(
-          "Some error occured during fetching api, error of catch blog",
-          e
-        );
+      alert("You must log in first to edit user information");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/home/welcome", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("User details response status:", response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
+      const data = await response.json();
+      console.log("Fetched user details:", data);
+      setUserInfo(data.user || {});
+    } catch (error) {
+      console.error("Error fetching user details:", error);
     }
   };
 
-  const edituser = async (id) => {
+  // Update user information
+  const updateUser = async (id) => {
+    const token = getToken();
     try {
-      const formdata = new FormData();
-      formdata.append("username", username);
-      formdata.append("email", email);
+      const payload = { username, email };
+      console.log("Updating user with payload:", payload);
 
-      alert(id);
-      let response = await fetch(
+      const response = await fetch(
         `http://localhost:8000/api/edituser/update/${id}`,
         {
-          method: "put",
+          method: "PUT",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: formdata
+          body: JSON.stringify(payload),
         }
       );
-      let data = await response.json();
-      console.log(data);
-      setEditdata(data);
-    } catch (e) {
-      console.log("Some error occured", e);
+
+      console.log("Update user response status:", response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response text:", errorText);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Update user response data:", data);
+      alert("User updated successfully!");
+    } catch (error) {
+      console.error("Error updating user:", error);
     }
   };
 
+  // Initialize user details on component load
   useEffect(() => {
-    userdetail();
+    fetchUserDetails();
   }, []);
+
+  // Update email and username fields when userinfo changes
+  useEffect(() => {
+    if (userinfo) {
+      setEmail(userinfo.email || "");
+      setUsername(userinfo.username || ""); // Updated for case consistency
+    }
+  }, [userinfo]);
+
+  // Form submission handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (userinfo && userinfo.userid) {
+      updateUser(userinfo.userid);
+    } else {
+      console.error("User ID is missing or invalid.");
+    }
+  };
 
   return (
     <div>
       <Navbar />
-
-      <form class="max-w-md mx-auto">
-        <div class="relative z-0 w-full mb-5 group">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-md mx-auto mt-8 p-4 border border-gray-300 rounded-lg shadow"
+      >
+        <h2 className="text-lg font-semibold mb-4">Edit User Information</h2>
+        <div className="relative z-0 w-full mb-5 group">
           <input
             type="email"
-            name="floating_email"
-            id="floating_email"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            name="email"
+            id="email"
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             required
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <label
-            for="floating_email"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            htmlFor="email"
+            className="peer-focus:font-medium text-sm text-gray-500 peer-focus:text-blue-600"
           >
-            {userinfo.email}
+            Email
           </label>
         </div>
-        <div class="relative z-0 w-full mb-5 group"></div>
-
-        <div class="grid md:grid-cols-2 md:gap-6">
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="floating_first_name"
-              id="floating_first_name"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-            />
-            <label
-              for="floating_first_name"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              {userinfo.Username}
-            </label>
-          </div>
+        <div className="relative z-0 w-full mb-5 group">
+          <input
+            type="text"
+            name="username"
+            id="username"
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            placeholder=" "
+            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <label
+            htmlFor="username"
+            className="peer-focus:font-medium text-sm text-gray-500 peer-focus:text-blue-600"
+          >
+            Username
+          </label>
         </div>
-        <div class="grid md:grid-cols-2 md:gap-6"></div>
         <button
-          onClick={() => {
-            edituser(userinfo.userid);
-          }}
           type="submit"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5"
         >
           Submit and Edit
         </button>

@@ -39,6 +39,7 @@ const edituser = async (req, res) => {
     { _id: id },
     { username, email },
     {
+
       new: true,
     }
   );
@@ -47,6 +48,7 @@ const edituser = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "Successfully modified user Information",
+      user:email,username
     });
   } else {
     return res.status(400).json({
