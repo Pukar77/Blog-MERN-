@@ -29,6 +29,10 @@ const fileSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  comment: {
+    type: String,
+    
+  },
   status: {
     type: String,
     enum: ["draft", "published"],
